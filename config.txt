@@ -1,0 +1,5 @@
+npm init -y
+npm install axios dotenv express csv-parser body-parser
+npm install xlsx multer
+npm init -y
+npm install axios dotenv xlsx form-data

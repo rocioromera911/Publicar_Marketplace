@@ -1,0 +1,32 @@
+{
+  "name": "publicar_marketplace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rocioromera911/Publicar_Marketplace.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rocioromera911/Publicar_Marketplace/issues"
+  },
+  "homepage": "https://github.com/rocioromera911/Publicar_Marketplace#readme",
+  "dependencies": {
+    "axios": "^1.13.0",
+    "body-parser": "^2.2.0",
+    "csv-parser": "^3.2.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "form-data": "^4.0.4",
+    "fs": "^0.0.1-security",
+    "multer": "^2.0.2",
+    "xlsx": "^0.18.5"
+  }
+}

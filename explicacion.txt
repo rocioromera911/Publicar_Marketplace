@@ -1,0 +1,138 @@
+Paso 0: Preparar el entorno
+
+Instala Node.js si no lo tenés: https://nodejs.org/
+
+Abre VS Code y crea una carpeta para tu proyecto, por ejemplo fb-marketplace.
+
+Abre esa carpeta en VS Code.
+
+Inicializa Node.js:
+
+npm init -y
+
+
+Instala Axios para hacer llamadas HTTP:
+
+npm install axios
+
+
+(Opcional) Instala dotenv para guardar el token y la ID de tu página de forma segura:
+
+npm install dotenv
+
+
+Crea un archivo .env en la raíz con tus credenciales:
+
+PAGE_ID=TU_PAGE_ID
+ACCESS_TOKEN=TU_ACCESS_TOKEN
+
+
+Reemplazá TU_PAGE_ID y TU_ACCESS_TOKEN por los reales.
+
+Paso 1: Crear archivo principal
+
+Crea un archivo llamado index.js y pon lo siguiente:
+
+require('dotenv').config();
+const axios = require('axios');
+
+// Datos del producto
+const producto = {
+  title: "Súper Combo Cocina Kira",
+  description: "Bacha + Monocomando + Dispenser. Calidad insuperable.",
+  price: 15000,
+  images: ["https://link1.jpg", "https://link2.jpg"]
+};
+
+const PAGE_ID = process.env.PAGE_ID;
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+
+async function publicarProducto() {
+  try {
+    // Subir la primera imagen
+    const response = await axios.post(
+      `https://graph.facebook.com/v18.0/${PAGE_ID}/photos`,
+      null,
+      {
+        params: {
+          url: producto.images[0],
+          caption: `${producto.title}\nPrecio: $${producto.price}\n${producto.description}`,
+          published: true,
+          access_token: ACCESS_TOKEN
+        }
+      }
+    );
+
+    console.log("Publicación creada con ID:", response.data.id);
+
+  } catch (error) {
+    console.error("Error al publicar:", error.response ? error.response.data : error.message);
+  }
+}
+
+publicarProducto();
+
+Paso 2: Explicación del flujo
+
+dotenv → permite leer las credenciales de .env.
+
+axios.post → envía la solicitud a Facebook para crear la publicación.
+
+url → URL de la imagen que se sube.
+
+caption → el mensaje de la publicación (título + precio + descripción).
+
+published: true → publica inmediatamente.
+
+response.data.id → ID de la publicación que Facebook devuelve.
+
+Paso 3: Ejecutar
+
+En VS Code, abrí la terminal y ejecutá:
+
+node index.js
+
+
+Si todo está correcto, verás algo como:
+
+Publicación creada con ID: 1234567890
+
+
+¡Eso significa que la publicación se creó en tu página!
+
+Paso 4: Varias imágenes
+
+Para publicar varias imágenes juntas (tipo álbum):
+
+Primero subís cada imagen usando /photos con published=false.
+
+Guardás los id de cada imagen.
+
+Hacés un POST a /feed con attached_media → un array con los IDs de las fotos.
+
+Ejemplo básico:
+
+const attached_media = [
+  { media_fbid: "ID_FOTO_1" },
+  { media_fbid: "ID_FOTO_2" }
+];
+
+await axios.post(
+  `https://graph.facebook.com/v18.0/${PAGE_ID}/feed`,
+  null,
+  {
+    params: {
+      message: `${producto.title}\nPrecio: $${producto.price}\n${producto.description}`,
+      attached_media: JSON.stringify(attached_media),
+      access_token: ACCESS_TOKEN
+    }
+  }
+);
+
+Paso 5: Automatizar varios productos
+
+Guardás tus productos en un CSV o Excel.
+
+Leés los datos usando csv-parser o xlsx.
+
+Iterás sobre cada producto y repetís la publicación.
